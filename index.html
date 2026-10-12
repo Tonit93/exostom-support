@@ -1,0 +1,390 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dental Support — техподдержка</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar" id="sidebar">
+        <div class="brand">
+          <div class="brand-mark">DS</div>
+          <div>
+            <strong>Exostom Support</strong><span>Центр поддержки</span>
+          </div>
+        </div>
+        <div class="workspace-label">РАБОЧЕЕ ПРОСТРАНСТВО</div>
+        <nav class="main-nav" aria-label="Основная навигация">
+          <button class="nav-item active" data-view="inbox">
+            <span class="nav-icon">▤</span> Обращения
+            <span class="nav-count" id="openCount">0</span>
+          </button>
+          <button class="nav-item" data-view="customers">
+            <span class="nav-icon">♙</span> Клиенты
+          </button>
+          <button class="nav-item" data-view="equipment">
+            <span class="nav-icon">⚙</span> Оборудование
+          </button>
+          <button class="nav-item" data-view="reports">
+            <span class="nav-icon">▥</span> Сводка
+          </button>
+        </nav>
+        <div class="sidebar-bottom">
+          <div class="online-dot"></div>
+          <span>Локальный режим</span>
+          <button
+            class="icon-button"
+            id="resetDemo"
+            title="Сбросить демоданные"
+          >
+            ↻
+          </button>
+        </div>
+        <div class="sidebar-user">
+          <div class="avatar avatar-blue">АБ</div>
+          <div class="user-meta">
+            <strong>Антон Беляев</strong><span>Техподдержка</span>
+          </div>
+          <span class="more">•••</span>
+        </div>
+      </aside>
+
+      <main class="main-area">
+        <header class="topbar">
+          <button
+            class="mobile-menu icon-button"
+            id="mobileMenu"
+            aria-label="Открыть меню"
+          >
+            ☰
+          </button>
+          <div class="breadcrumbs">
+            <span>Exostom Support</span><b>/</b
+            ><strong id="pageTitle">Обращения</strong>
+          </div>
+          <div class="topbar-actions">
+            <label class="global-search"
+              ><span>⌕</span
+              ><input
+                id="globalSearch"
+                placeholder="Поиск клиента, заявки..."
+                autocomplete="off"
+              /><kbd>Ctrl K</kbd></label
+            >
+            <button class="icon-button notification-button" title="Уведомления">
+              ♧<i></i>
+            </button>
+            <button class="primary-button" id="newTicketBtn">
+              ＋ Новое обращение
+            </button>
+          </div>
+        </header>
+
+        <section class="view active" id="view-inbox">
+          <div class="page-heading">
+            <div>
+              <p class="eyebrow">КЛИЕНТСКИЙ СЕРВИС</p>
+              <h1>Обращения</h1>
+              <p class="subheading">Все запросы клиентов в одном месте.</p>
+            </div>
+            <button class="outline-button" id="exportBtn">↓ Экспорт CSV</button>
+          </div>
+          <div class="stats-grid">
+            <article class="stat-card">
+              <div class="stat-top">
+                <span>Открытые</span><span class="stat-symbol blue">▤</span>
+              </div>
+              <strong id="statOpen">0</strong><small>Требуют внимания</small>
+            </article>
+            <article class="stat-card">
+              <div class="stat-top">
+                <span>В работе</span><span class="stat-symbol amber">◷</span>
+              </div>
+              <strong id="statProgress">0</strong
+              ><small>Назначен специалист</small>
+            </article>
+            <article class="stat-card">
+              <div class="stat-top">
+                <span>Ожидают клиента</span
+                ><span class="stat-symbol violet">…</span>
+              </div>
+              <strong id="statWaiting">0</strong
+              ><small>Нужна дополнительная информация</small>
+            </article>
+            <article class="stat-card">
+              <div class="stat-top">
+                <span>Решено</span><span class="stat-symbol green">✓</span>
+              </div>
+              <strong id="statSolved">0</strong
+              ><small>Закрытые обращения</small>
+            </article>
+          </div>
+          <div class="content-card">
+            <div class="table-toolbar">
+              <div class="tabs" id="ticketFilters">
+                <button class="tab active" data-filter="all">
+                  Все <span id="filterAll">0</span>
+                </button>
+                <button class="tab" data-filter="open">Открытые</button>
+                <button class="tab" data-filter="progress">В работе</button>
+                <button class="tab" data-filter="waiting">
+                  Ожидают клиента
+                </button>
+                <button class="tab" data-filter="solved">Решённые</button>
+              </div>
+              <label class="small-search"
+                ><span>⌕</span
+                ><input id="ticketSearch" placeholder="Поиск по обращениям"
+              /></label>
+            </div>
+            <div class="ticket-table-wrap">
+              <table class="ticket-table">
+                <thead>
+                  <tr>
+                    <th>ОБРАЩЕНИЕ</th>
+                    <th>КЛИЕНТ</th>
+                    <th>ОБОРУДОВАНИЕ</th>
+                    <th>ПРИОРИТЕТ</th>
+                    <th>СТАТУС</th>
+                    <th>ОБНОВЛЕНО</th>
+                  </tr>
+                </thead>
+                <tbody id="ticketRows"></tbody>
+              </table>
+              <div class="empty-state hidden" id="ticketEmpty">
+                <div class="empty-icon">▤</div>
+                <strong>Обращений не найдено</strong>
+                <p>Измените фильтр или создайте новое обращение.</p>
+              </div>
+            </div>
+            <div class="table-footer">
+              <span id="ticketCountText">Показано 0 обращений</span
+              ><span>Данные сохраняются в этом браузере</span>
+            </div>
+          </div>
+        </section>
+
+        <section class="view" id="view-customers">
+          <div class="page-heading">
+            <div>
+              <p class="eyebrow">КЛИЕНТСКАЯ БАЗА</p>
+              <h1>Клиенты</h1>
+              <p class="subheading">
+                Контакты клиник и история взаимодействия.
+              </p>
+            </div>
+            <button class="primary-button" id="newCustomerBtn">
+              ＋ Добавить клиента
+            </button>
+          </div>
+          <div class="content-card">
+            <div class="table-toolbar">
+              <div>
+                <h3>Все клиенты</h3>
+                <p class="muted">Клиники, лаборатории и партнёры</p>
+              </div>
+              <label class="small-search"
+                ><span>⌕</span
+                ><input id="customerSearch" placeholder="Поиск клиентов"
+              /></label>
+            </div>
+            <div class="customer-grid" id="customerGrid"></div>
+          </div>
+        </section>
+
+        <section class="view" id="view-equipment">
+          <div class="page-heading">
+            <div>
+              <p class="eyebrow">УЧЁТ ОБОРУДОВАНИЯ</p>
+              <h1>Оборудование</h1>
+              <p class="subheading">Модели, серийные номера и обслуживание.</p>
+            </div>
+            <button class="primary-button" id="newEquipmentBtn">
+              ＋ Добавить оборудование
+            </button>
+          </div>
+          <div class="content-card">
+            <div class="table-toolbar">
+              <div>
+                <h3>Оборудование клиентов</h3>
+                <p class="muted">Привязано к карточкам организаций</p>
+              </div>
+              <label class="small-search"
+                ><span>⌕</span
+                ><input id="equipmentSearch" placeholder="Поиск оборудования"
+              /></label>
+            </div>
+            <div class="equipment-grid" id="equipmentGrid"></div>
+          </div>
+        </section>
+
+        <section class="view" id="view-reports">
+          <div class="page-heading">
+            <div>
+              <p class="eyebrow">АНАЛИТИКА</p>
+              <h1>Сводка</h1>
+              <p class="subheading">Текущее состояние службы поддержки.</p>
+            </div>
+          </div>
+          <div class="stats-grid reports-stats">
+            <article class="stat-card">
+              <div class="stat-top">
+                <span>Всего обращений</span
+                ><span class="stat-symbol blue">▤</span>
+              </div>
+              <strong id="reportTotal">0</strong
+              ><small>За всё время в демобазе</small>
+            </article>
+            <article class="stat-card">
+              <div class="stat-top">
+                <span>Клиенты</span><span class="stat-symbol violet">♙</span>
+              </div>
+              <strong id="reportCustomers">0</strong
+              ><small>Организации в базе</small>
+            </article>
+            <article class="stat-card">
+              <div class="stat-top">
+                <span>Единицы оборудования</span
+                ><span class="stat-symbol green">⚙</span>
+              </div>
+              <strong id="reportEquipment">0</strong
+              ><small>Добавлено в учёт</small>
+            </article>
+          </div>
+          <div class="content-card report-card">
+            <h3>Обращения по статусам</h3>
+            <div id="statusBars" class="status-bars"></div>
+            <p class="notice">
+              Это локальная демонстрационная статистика. Она не синхронизируется
+              между компьютерами.
+            </p>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <div class="overlay hidden" id="ticketOverlay">
+      <aside
+        class="ticket-detail"
+        role="dialog"
+        aria-modal="true"
+        aria-label="Карточка обращения"
+      >
+        <div class="detail-header">
+          <div>
+            <span class="eyebrow">КАРТОЧКА ОБРАЩЕНИЯ</span>
+            <h2 id="detailTitle">Обращение</h2>
+            <span id="detailId" class="muted"></span>
+          </div>
+          <button
+            class="icon-button close-detail"
+            id="closeDetail"
+            aria-label="Закрыть"
+          >
+            ×
+          </button>
+        </div>
+        <div class="detail-scroll">
+          <div class="detail-chips">
+            <span id="detailStatus" class="status-pill"></span
+            ><span id="detailPriority" class="priority-pill"></span>
+          </div>
+          <div class="detail-section">
+            <label>Описание проблемы</label>
+            <p id="detailDescription" class="detail-description"></p>
+          </div>
+          <div class="detail-section">
+            <label>Клиент</label>
+            <div class="detail-info">
+              <div class="avatar avatar-teal" id="detailCustomerAvatar">К</div>
+              <div>
+                <strong id="detailCustomer"></strong
+                ><span id="detailContact"></span>
+              </div>
+            </div>
+          </div>
+          <div class="detail-section">
+            <label>Оборудование</label>
+            <div class="equipment-info">
+              <span class="equipment-icon">⚙</span>
+              <div>
+                <strong id="detailEquipment"></strong
+                ><span id="detailSerial"></span>
+              </div>
+            </div>
+          </div>
+          <div class="detail-section form-inline">
+            <label for="detailStatusSelect">Изменить статус</label
+            ><select id="detailStatusSelect">
+              <option value="open">Открыто</option>
+              <option value="progress">В работе</option>
+              <option value="waiting">Ожидает клиента</option>
+              <option value="solved">Решено</option>
+            </select>
+          </div>
+          <div class="detail-section form-inline">
+            <label for="detailPrioritySelect">Приоритет</label
+            ><select id="detailPrioritySelect">
+              <option value="low">Низкий</option>
+              <option value="normal">Обычный</option>
+              <option value="high">Высокий</option>
+              <option value="urgent">Срочный</option>
+            </select>
+          </div>
+          <div class="detail-section">
+            <div class="section-title-row">
+              <label>Переписка</label
+              ><span id="messageCount" class="muted small"></span>
+            </div>
+            <div class="messages" id="messages"></div>
+            <form id="replyForm" class="reply-form">
+              <textarea
+                id="replyInput"
+                rows="3"
+                placeholder="Напишите ответ клиенту..."
+                required
+              ></textarea>
+              <div class="reply-actions">
+                <span class="muted small">Enter — новая строка</span
+                ><button class="primary-button" type="submit">
+                  Отправить ↗
+                </button>
+              </div>
+            </form>
+          </div>
+          <div class="detail-section">
+            <button class="danger-button" id="deleteTicketBtn">
+              Удалить обращение
+            </button>
+          </div>
+        </div>
+      </aside>
+    </div>
+
+    <div class="modal-backdrop hidden" id="modalBackdrop">
+      <div class="modal" role="dialog" aria-modal="true">
+        <div class="modal-header">
+          <div>
+            <span class="eyebrow">DENTAL SUPPORT</span>
+            <h2 id="modalTitle">Новое обращение</h2>
+          </div>
+          <button class="icon-button" id="closeModal">×</button>
+        </div>
+        <form id="modalForm">
+          <div id="modalFields" class="modal-fields"></div>
+          <div class="modal-actions">
+            <button class="outline-button" type="button" id="cancelModal">
+              Отмена</button
+            ><button class="primary-button" type="submit" id="modalSubmit">
+              Создать
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+    <div class="toast-container" id="toastContainer" aria-live="polite"></div>
+    <script src="script.js"></script>
+  </body>
+</html>
